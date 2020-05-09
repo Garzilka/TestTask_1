@@ -21,16 +21,18 @@ APlayerCharacter::APlayerCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
+
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
 	SpringArm->TargetArmLength = 900.f;
-	SpringArm->bUsePawnControlRotation = true;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
-	Camera->bUsePawnControlRotation = false;
+
+	Camera->bUsePawnControlRotation = true;
+	SpringArm->bUsePawnControlRotation = false;
 }
 
 // Called when the game starts or when spawned
@@ -61,35 +63,106 @@ void APlayerCharacter::Tick(float DeltaTime)
 	{
 		if (OutHit.bBlockingHit)
 		{
-			ANoughtsAndCrosses*t = Cast<ANoughtsAndCrosses>(OutHit.GetActor());
-			if (t != NULL)
+			RefActor = Cast<ANoughtsAndCrosses>(OutHit.GetActor());
+			if (RefActor != NULL)
 			{
-				t->isSelect = true;
+				RefActor->isSelect = true;
 				//UE_LOG(LogTemp, Log, TEXT("Worked"))
 			}
 			//else UE_LOG(LogTemp, Log, TEXT("NWorked"))
 		}
 	}
+	else RefActor = NULL;
 }
 
 // Called to bind functionality to input
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAction("RotateRMB", IE_Pressed, this, &APlayerCharacter::pressRightButton);
+	PlayerInputComponent->BindAction("RotateRMB", IE_Released, this, &APlayerCharacter::releaseRightButton);
+	PlayerInputComponent->BindAction("UseLMB", IE_Pressed, this, &APlayerCharacter::ClickLMB);
+	//PlayerInputComponent->BindAction("UseLMB", IE_Released, this, &APlayerCharacter::releaseRightButton);
+
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("Turn", this, &APlayerCharacter::GetMouseX);
 	PlayerInputComponent->BindAxis("TurnRate", this, &APlayerCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis("Turn", this, &APlayerCharacter::GetMouseY);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &APlayerCharacter::LookUpAtRate);
 }
 
 void APlayerCharacter::TurnAtRate(float Rate)
 {
-	// calculate delta for this frame from the rate information
-	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+	FRotator F(SpringArm->GetRelativeRotation());
+	FRotator A(F.Pitch, F.Yaw + b_MouseX,F.Roll);
+	Camera->bUsePawnControlRotation = true;
+	SpringArm->bUsePawnControlRotation = false;
+	
+	
+
+	if (!isRMB)
+	{
+		Camera->bUsePawnControlRotation = true;
+		AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+
+	}
+	else
+	{
+		Camera->bUsePawnControlRotation = false;
+		SpringArm->SetRelativeRotation(A);
+		
+	}
 }
 
 void APlayerCharacter::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
-	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+	
+	FRotator F(SpringArm->GetRelativeRotation());
+	FRotator A(F.Pitch, F.Yaw, F.Roll);
+	Camera->bUsePawnControlRotation = true;
+	SpringArm->bUsePawnControlRotation = false;
+
+	if (!isRMB)
+	{
+		Camera->bUsePawnControlRotation = true;
+		AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+
+	}
+	else
+	{
+		Camera->bUsePawnControlRotation = false;
+		SpringArm->SetRelativeRotation(A);
+
+	}
+}
+
+void APlayerCharacter::pressRightButton()
+{
+	isRMB = true;
+}
+
+void APlayerCharacter::releaseRightButton()
+{
+	isRMB = false;
+}
+
+void APlayerCharacter::GetMouseX(float Rate)
+{
+	b_MouseX = Rate;
+}
+
+void APlayerCharacter::GetMouseY(float Rate)
+{
+	b_MouseY = Rate;
+}
+
+void APlayerCharacter::ClickLMB()
+{
+	if (RefActor != NULL)
+	{
+		RefActor->Enabled(true);
+	}
 }

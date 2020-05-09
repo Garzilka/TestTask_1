@@ -11,17 +11,48 @@ ANoughtsAndCrosses::ANoughtsAndCrosses()
 
 	mMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("mMyMesh_"));
 	mMesh->SetupAttachment(RootComponent);
-	//RootComponent = Mesh;
 
 	_Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
 	_Box->SetupAttachment(mMesh);
 	
 	OffMaterial = CreateDefaultSubobject<UMaterial>(TEXT("OffMaterial"));
 	OnMaterial = CreateDefaultSubobject<UMaterial>(TEXT("OnMaterial"));
+
+	Place = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("pPlace"));
+	MeshCross = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("mMeshCross_"));
+	MeshZero = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("mMeshZero_"));
+	Place->SetupAttachment(_Box);
+	MeshCross->SetupAttachment(Place);
+	MeshZero->SetupAttachment(Place);
+
+
+
+
 	
 	
 	
 }
+
+void ANoughtsAndCrosses::Enabled(bool Type)
+{
+	if (Type)
+	{
+		Place->SetStaticMesh(MeshCross->GetStaticMesh());
+		if (_bManager != NULL)
+			Cast<ANoughtsAndCrosses_Manager>(_bManager)->changeStats(verticalPos, horizontalPos, 1);
+		
+	}
+	else
+	{
+		Place->SetStaticMesh(MeshZero->GetStaticMesh());
+		if (_bManager != NULL)
+			Cast<ANoughtsAndCrosses_Manager>(_bManager)->changeStats(verticalPos, horizontalPos, 2);
+		
+	}
+
+	
+}
+
 
 // Called when the game starts or when spawned
 void ANoughtsAndCrosses::BeginPlay()
