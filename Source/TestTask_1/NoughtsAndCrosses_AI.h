@@ -4,25 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "NoughtsAndCrosses_AI.generated.h"
 
-UCLASS()
-class TESTTASK_1_API ANoughtsAndCrosses_AI : public AActor
+class ANoughtsAndCrosses_Manager;
+
+class  ANoughtsAndCrosses_AI 
 {
-	GENERATED_BODY()
+
 	
 public:	
 	// Sets default values for this actor's properties
 	ANoughtsAndCrosses_AI();
-
-	
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	//UPROPERTY(EditDefaultsOnly, Category = "Spawning")
+	ANoughtsAndCrosses_Manager* _bManager;
+	bool PlayerisBlockMe = false;
+	int Stats[5][5];
+	void Step();
 
 };

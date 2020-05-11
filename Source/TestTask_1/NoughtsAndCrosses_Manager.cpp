@@ -2,6 +2,8 @@
 
 
 #include "NoughtsAndCrosses.h"
+#include "NoughtsAndCrosses_AI.h"
+#include "NoughtsAndCrosses_Manager.h"
 
 // Sets default values
 ANoughtsAndCrosses_Manager::ANoughtsAndCrosses_Manager()
@@ -9,7 +11,8 @@ ANoughtsAndCrosses_Manager::ANoughtsAndCrosses_Manager()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	
+	AI = new ANoughtsAndCrosses_AI();
+	AI->_bManager = this;
 	//bPlayer = Cast<APlayerCharacter>(GetWorld()->GetFirstPlayerController());
 	for (int i = 0; i < 5; i++)
 		for (int j = 0; j < 5; j++)
@@ -48,16 +51,14 @@ void ANoughtsAndCrosses_Manager::SpawnObjects()
 		{
 
 			FVector A(b, a, 0);
-
 			AActor* Spawn = GetWorld()->SpawnActor<AActor>(ActorToSpawn, A, B, SpawnParam);
-			ANoughtsAndCrosses*t = Cast<ANoughtsAndCrosses>(Spawn);
-			t->AddActorLocalOffset(A);
-			if (t != NULL)
+			this->_bCubes[i][j] = Cast<ANoughtsAndCrosses>(Spawn);
+			this->_bCubes[i][j]->AddActorLocalOffset(A);
+			if (_bCubes[i][j] != NULL)
 			{
-				t->horizontalPos = i;
-				t->verticalPos = j;
-				t->_bManager =  this;
-
+				this->_bCubes[i][j]->horizontalPos = i;
+				this->_bCubes[i][j]->verticalPos = j;
+				this->_bCubes[i][j]->_bManager =  this;
 			}
 			a += 100;
 		}
@@ -71,6 +72,10 @@ void ANoughtsAndCrosses_Manager::changeStats(int i, int j, int type)
 {
 	Stats[i][j] = type;
 	SearchWinner();
+	if (type == 1)
+	{
+		AI->Step();
+	}
 }
 
 void ANoughtsAndCrosses_Manager::SearchWinner()
@@ -95,7 +100,9 @@ void ANoughtsAndCrosses_Manager::SearchWinner()
 		if (counterC > 4)
 			UE_LOG(LogTemp, Log, TEXT("Line : %d Count cross   %d, Count zero %d"), i, counterC, counterZ);
 		if (counterC == 5)
-			UE_LOG(LogTemp, Log, TEXT("Win!!!"));
+			UE_LOG(LogTemp, Log, TEXT("Player Win!!!"));
+		if (counterZ == 5)
+			UE_LOG(LogTemp, Log, TEXT("AI Win!!!"));
 		counterC = 0;
 		counterZ = 0;
 	}
@@ -118,6 +125,7 @@ void ANoughtsAndCrosses_Manager::SearchWinner()
 		counterC = 0;
 		counterZ = 0;
 	}
+	
 
 	
 }

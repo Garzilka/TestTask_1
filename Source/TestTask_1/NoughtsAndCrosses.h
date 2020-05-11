@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
-#include "NoughtsAndCrosses_Manager.h"
 #include "Materials/Material.h"
 #include "NoughtsAndCrosses.generated.h"
 

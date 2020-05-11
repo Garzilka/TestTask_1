@@ -2,7 +2,7 @@
 
 
 #include "NoughtsAndCrosses.h"
-
+#include "NoughtsAndCrosses_Manager.h"
 // Sets default values
 ANoughtsAndCrosses::ANoughtsAndCrosses()
 {
@@ -39,14 +39,15 @@ void ANoughtsAndCrosses::Enabled(bool Type)
 	{
 		Place->SetStaticMesh(MeshCross->GetStaticMesh());
 		if (_bManager != NULL)
-			Cast<ANoughtsAndCrosses_Manager>(_bManager)->changeStats(verticalPos, horizontalPos, 1);
+			Cast<ANoughtsAndCrosses_Manager>(_bManager)->changeStats(horizontalPos , verticalPos, 1);
 		
 	}
 	else
 	{
 		Place->SetStaticMesh(MeshZero->GetStaticMesh());
 		if (_bManager != NULL)
-			Cast<ANoughtsAndCrosses_Manager>(_bManager)->changeStats(verticalPos, horizontalPos, 2);
+			Cast<ANoughtsAndCrosses_Manager>(_bManager)->changeStats(horizontalPos,  verticalPos, 2);
+		UE_LOG(LogTemp, Log, TEXT("Select [%d,%d]"), horizontalPos , verticalPos);
 		
 	}
 
