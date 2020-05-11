@@ -79,62 +79,26 @@ void ANoughtsAndCrosses_Manager::changeStats(int i, int j, int type)
 {
 	Stats[i][j] = type;
 	SearchWinner();
-	if (type == 1)
-	{
-		AI->Step();
-	}
+	if (type == 1)	AI->Step();
 }
 
 void ANoughtsAndCrosses_Manager::SearchWinner()
 {
-	int counterC = 0;
-	int counterZ = 0;
-	int currentType = Stats[0][0];
-	int i = 0, j = 0;
-	
-	for (i = 0; i < 5; i++)
+	int counterPlayer = 0;
+	int counterAI = 0;
+	bool gameOut = false;
+	for (int i = 0; i < 5; i++)
 	{
-		for (j = 0; j < 5; j++)
+		for ( int j = 0; j < 5; j++)
 		{
-			if (Stats[i][j] == 1)
-				counterC++;
-			else if (Stats[i][j] == 2) counterC = 0;
+			if (Stats[i][j] == 1 || Stats[j][i] == 1)	counterPlayer++;
+			if (Stats[i][j] == 2 || Stats[j][i] == 2)	counterAI++;
+		}
+		if (counterPlayer > 4 && !gameOut) { CreateWidget(1); gameOut = true; break; }
+		if (counterAI > 4 && !gameOut)		{ CreateWidget(2); gameOut = true; break;}
 
-			if (Stats[i][j] == 2)
-				counterZ++;
-			else if (Stats[i][j] == 1) counterZ = 0;
-		}
-		if (counterC == 5)
-		{
-			UE_LOG(LogTemp, Log, TEXT("Player Win!!!"));
-			CreateWidget(1);
-		}
-		if (counterZ == 5)
-		{
-			UE_LOG(LogTemp, Log, TEXT("AI Win!!!"));
-			CreateWidget(2);
-		}
-		counterC = 0;
-		counterZ = 0;
+		counterPlayer = 0;
+		counterAI = 0;
 	}
-	for (i = 0; i < 5; i++)
-	{
-		for (j = 0; j < 5; j++)
-		{
-			if (Stats[j][i] == 1)
-				counterC++;
-			else if (Stats[j][i] == 2) counterC = 0;
-
-			if (Stats[j][i] == 2)
-				counterZ++;
-			else if (Stats[j][i] == 1) counterZ = 0;
-		}
-		if (counterC == 5 || counterZ == 5)
-			UE_LOG(LogTemp, Log, TEXT("Win!!!"));
-		counterC = 0;
-		counterZ = 0;
-	}
-	
-
-	
 }
+

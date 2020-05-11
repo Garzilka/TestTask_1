@@ -20,24 +20,30 @@ public:
 	// Sets default values for this actor's properties
 	ANoughtsAndCrosses_Manager();
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)//Можно сделать enum конечно, но нет
 		int SettingAI;
-	
+	//Состояние сетки
 	int Stats[5][5];
+	//Ссылки кубов на сцене
 	ANoughtsAndCrosses* _bCubes[5][5];
+	//"Искуственный интеллект"
 	NoughtsAndCrosses_AI* AI;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
 	TSubclassOf<AActor> ActorToSpawn;
+	//Изменения состояния кубов на сцене
 	void changeStats(int i, int j, int type);
 protected:
 	
 	void SearchWinner();
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	//Создание послеигровой статистики в BP 
 	UFUNCTION(BlueprintImplementableEvent)
 		void CreateWidget(int Type);
+	//Создание сетки кубов на сцене
 	UFUNCTION()
-	void SpawnObjects();
+		void SpawnObjects();
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

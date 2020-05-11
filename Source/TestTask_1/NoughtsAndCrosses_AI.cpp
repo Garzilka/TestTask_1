@@ -13,40 +13,30 @@ Easy_NoughtsAndCrosses_AI::Easy_NoughtsAndCrosses_AI()
 void Easy_NoughtsAndCrosses_AI::Step()
 {
 	int counter = 0;
-	int Counter = 0;
 	bool can = true;
 	if (!checkPlayer())
 	{
 		if (Horizontal_Verical())
-		{
-			UE_LOG(LogTemp, Log, TEXT("Tactic Horizontal"));
-
 			for (int i = 0; i < 5; i++)
 			{
 				for (int j = 0; j < 5; j++)
 				{
 					for (int j1 = 0; j1 < 5; j1++)
-					{
-						if (Cast<ANoughtsAndCrosses_Manager>(_bManager)->Stats[i][j1] == 1)
+						if (_bManager->Stats[i][j1] == 1)
 						{
 							j = 5;
 							can = false;
-						}
-					}
-					if (Cast<ANoughtsAndCrosses_Manager>(_bManager)->Stats[i][j] == 0 && can)
+						}					
+					if (_bManager->Stats[i][j] == 0 && can)
 					{
-						
-						if (Cast<ANoughtsAndCrosses_Manager>(_bManager)->Stats[i][j] == 0)
-						{
-							UE_LOG(LogTemp, Log, TEXT("Select [%d,%d]"), i, j);
-							Cast<ANoughtsAndCrosses_Manager>(_bManager)->_bCubes[i][j]->Enabled(false);
-							return;
-						}
+						_bManager->_bCubes[i][j]->Enabled(false);
+						return;
 					}
+					
 				}
 				can = true;
 			}
-		}
+		
 		else
 		{
 			UE_LOG(LogTemp, Log, TEXT("Tactic Horizontal"));
@@ -56,21 +46,16 @@ void Easy_NoughtsAndCrosses_AI::Step()
 				{
 					for (int j1 = 0; j1 < 5; j1++)
 					{
-						if (Cast<ANoughtsAndCrosses_Manager>(_bManager)->Stats[j1][i] == 1)
+						if (_bManager->Stats[j1][i] == 1)
 						{
 							j = 5;
 							can = false;
 						}
 					}
-					if (Cast<ANoughtsAndCrosses_Manager>(_bManager)->Stats[j][i] == 0 && can)
+					if (_bManager->Stats[j][i] == 0 && can)
 					{
-						
-						if (Cast<ANoughtsAndCrosses_Manager>(_bManager)->Stats[j][i] == 0)
-						{
-							UE_LOG(LogTemp, Log, TEXT("Select [%d,%d]"), j, i);
-							Cast<ANoughtsAndCrosses_Manager>(_bManager)->_bCubes[j][i]->Enabled(false);
-							return;
-						}
+						_bManager->_bCubes[j][i]->Enabled(false);
+						return;	
 					}
 				}
 				can = true;
@@ -79,9 +64,9 @@ void Easy_NoughtsAndCrosses_AI::Step()
 		UE_LOG(LogTemp, Log, TEXT("There are no winning tactics"));
 		for (int i = 0; i < 5; i++)
 			for (int j = 0; j < 5; j++)
-				if (Cast<ANoughtsAndCrosses_Manager>(_bManager)->Stats[i][j] == 0)
+				if (_bManager->Stats[i][j] == 0)
 				{
-					Cast<ANoughtsAndCrosses_Manager>(_bManager)->_bCubes[i][j]->Enabled(false);
+					_bManager->_bCubes[i][j]->Enabled(false);
 					return;
 				}
 	}
@@ -90,44 +75,38 @@ bool Easy_NoughtsAndCrosses_AI::checkPlayer()
 {
 	int counterPlayer = 0;
 	isNeedBlockingPlayer = false;
-	isHorizontal = true;
 	for (int i = 0; i < 5; i++)
 	{
 		for (int j = 0; j < 5; j++)
 		{
-			if (Cast<ANoughtsAndCrosses_Manager>(_bManager)->Stats[i][j] == 1)
+			if (_bManager->Stats[i][j] == 1)
 			{
 				counterPlayer++;
 			}
-			if (Cast<ANoughtsAndCrosses_Manager>(_bManager)->Stats[i][j] == 2)
+			if (_bManager->Stats[i][j] == 2)
 			{
 				counterPlayer = 0; break;
 			}
 			if (counterPlayer > 3)
 			{
 				for (int j1 = 0; j1 < 5; j1++)				
-					if (Cast<ANoughtsAndCrosses_Manager>(_bManager)->Stats[i][j1] == 0)
+					if (_bManager->Stats[i][j1] == 0)
 					{
-						UE_LOG(LogTemp, Log, TEXT("Can block [%d,%d]"), i, j1);
-						Cast<ANoughtsAndCrosses_Manager>(_bManager)->_bCubes[i][j1]->Enabled(false);
+						_bManager->_bCubes[i][j1]->Enabled(false);
 						isNeedBlockingPlayer = true;
 						return true;
 					}
 				break;
 			}
 		}
-		if (counterPlayer > 3)
-		{
-			break;
-		}
+		if (counterPlayer > 3)	break;
 		counterPlayer = 0;
 	}
-	if(!isNeedBlockingPlayer)
 	for (int j = 0; j < 5; j++)
 	{
 		for (int i = 0; i < 5; i++)
 		{
-			if (Cast<ANoughtsAndCrosses_Manager>(_bManager)->Stats[i][j] == 1)
+			if (_bManager->Stats[i][j] == 1)
 			{
 				counterPlayer++;
 			}
@@ -135,10 +114,10 @@ bool Easy_NoughtsAndCrosses_AI::checkPlayer()
 			{
 				for (int i1 = 0; i1 < 5; i1++)
 				{
-					if (Cast<ANoughtsAndCrosses_Manager>(_bManager)->Stats[i1][j] == 0)
+					if (_bManager->Stats[i1][j] == 0)
 					{
 						UE_LOG(LogTemp, Log, TEXT("Can block [%d,%d]"), i1, j);
-						Cast<ANoughtsAndCrosses_Manager>(_bManager)->_bCubes[i1][j]->Enabled(false);
+						_bManager->_bCubes[i1][j]->Enabled(false);
 						return true;
 						break;
 					}
@@ -161,7 +140,7 @@ bool Easy_NoughtsAndCrosses_AI::Horizontal_Verical()
 	for (int i = 0; i < 5; i++)
 	{
 		for (int j = 0; j < 5; j++)
-			if (Cast<ANoughtsAndCrosses_Manager>(_bManager)->Stats[i][j] == 1)
+			if (_bManager->Stats[i][j] == 1)
 			{
 				j = 5;
 				Counter++;
