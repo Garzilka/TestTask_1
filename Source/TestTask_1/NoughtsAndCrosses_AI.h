@@ -18,6 +18,11 @@ public:
 	ANoughtsAndCrosses_Manager* _bManager;
 	bool PlayerisBlockMe = false;
 	int Stats[5][5];
+	int line = 0;
+	int colum = 0;
+	bool isNeedBlockingPlayer = false;
+	bool isHorizontal = true;
 	void Step();
-
+	bool checkPlayer();
+	bool Horizontal_Verical();
 };
