@@ -33,14 +33,16 @@ public:
 	TSubclassOf<AActor> ActorToSpawn;
 	//Изменения состояния кубов на сцене
 	void changeStats(int i, int j, int type);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void CreateWidget(int Type);
 protected:
 	
 	void SearchWinner();
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	//Создание послеигровой статистики в BP 
-	UFUNCTION(BlueprintImplementableEvent)
-		void CreateWidget(int Type);
+	
 	//Создание сетки кубов на сцене
 	UFUNCTION()
 		void SpawnObjects();

@@ -159,7 +159,7 @@ void APlayerCharacter::GetMouseY(float Rate)
 
 void APlayerCharacter::ClickLMB()
 {
-	if (RefActor != NULL)
+	if (RefActor != NULL && !RefActor->isUse)
 	{
 		RefActor->Enabled(true);
 	}

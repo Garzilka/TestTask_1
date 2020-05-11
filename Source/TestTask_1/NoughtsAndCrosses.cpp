@@ -35,6 +35,7 @@ ANoughtsAndCrosses::ANoughtsAndCrosses()
 
 void ANoughtsAndCrosses::Enabled(bool Type)
 {
+	isUse = true;
 	if (Type)
 	{
 		Place->SetStaticMesh(MeshCross->GetStaticMesh());

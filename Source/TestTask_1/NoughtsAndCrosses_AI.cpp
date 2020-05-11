@@ -12,8 +12,8 @@ Easy_NoughtsAndCrosses_AI::Easy_NoughtsAndCrosses_AI()
 
 void Easy_NoughtsAndCrosses_AI::Step()
 {
-	int counter = 0;
 	bool can = true;
+
 	if (!checkPlayer())
 	{
 		if (Horizontal_Verical())
@@ -21,6 +21,7 @@ void Easy_NoughtsAndCrosses_AI::Step()
 			{
 				for (int j = 0; j < 5; j++)
 				{
+					//Проверка линии
 					for (int j1 = 0; j1 < 5; j1++)
 						if (_bManager->Stats[i][j1] == 1)
 						{
@@ -39,7 +40,6 @@ void Easy_NoughtsAndCrosses_AI::Step()
 		
 		else
 		{
-			UE_LOG(LogTemp, Log, TEXT("Tactic Horizontal"));
 			for (int i = 0; i < 5; i++)
 			{
 				for (int j = 0; j < 5; j++)
@@ -67,6 +67,7 @@ void Easy_NoughtsAndCrosses_AI::Step()
 				if (_bManager->Stats[i][j] == 0)
 				{
 					_bManager->_bCubes[i][j]->Enabled(false);
+					_bManager->CreateWidget(0);
 					return;
 				}
 	}
