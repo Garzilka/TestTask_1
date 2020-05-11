@@ -11,7 +11,14 @@ ANoughtsAndCrosses_Manager::ANoughtsAndCrosses_Manager()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	AI = new ANoughtsAndCrosses_AI();
+	switch (SettingAI)
+	{
+	case 0:
+		AI = new Easy_NoughtsAndCrosses_AI();
+	default:
+		AI = new Easy_NoughtsAndCrosses_AI();
+	}
+	
 	AI->_bManager = this;
 	//bPlayer = Cast<APlayerCharacter>(GetWorld()->GetFirstPlayerController());
 	for (int i = 0; i < 5; i++)
@@ -97,12 +104,16 @@ void ANoughtsAndCrosses_Manager::SearchWinner()
 				counterZ++;
 			else if (Stats[i][j] == 1) counterZ = 0;
 		}
-		if (counterC > 4)
-			UE_LOG(LogTemp, Log, TEXT("Line : %d Count cross   %d, Count zero %d"), i, counterC, counterZ);
 		if (counterC == 5)
+		{
 			UE_LOG(LogTemp, Log, TEXT("Player Win!!!"));
+			CreateWidget(1);
+		}
 		if (counterZ == 5)
+		{
 			UE_LOG(LogTemp, Log, TEXT("AI Win!!!"));
+			CreateWidget(2);
+		}
 		counterC = 0;
 		counterZ = 0;
 	}
@@ -118,8 +129,6 @@ void ANoughtsAndCrosses_Manager::SearchWinner()
 				counterZ++;
 			else if (Stats[j][i] == 1) counterZ = 0;
 		}
-		if (counterC > 3)
-			UE_LOG(LogTemp, Log, TEXT("Line : %d Count cross   %d, Count zero %d"), j, counterC, counterZ);
 		if (counterC == 5 || counterZ == 5)
 			UE_LOG(LogTemp, Log, TEXT("Win!!!"));
 		counterC = 0;

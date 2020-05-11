@@ -129,13 +129,11 @@ void APlayerCharacter::LookUpAtRate(float Rate)
 	{
 		Camera->bUsePawnControlRotation = true;
 		AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
-
 	}
 	else
 	{
-		Camera->bUsePawnControlRotation = false;
-		SpringArm->SetRelativeRotation(A);
-
+		Camera->bUsePawnControlRotation = false; 
+		SpringArm->SetRelativeRotation(A); 
 	}
 }
 

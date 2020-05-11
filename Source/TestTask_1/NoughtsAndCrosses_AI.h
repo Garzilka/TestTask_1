@@ -7,22 +7,25 @@
 
 class ANoughtsAndCrosses_Manager;
 
-class  ANoughtsAndCrosses_AI 
+class NoughtsAndCrosses_AI
 {
-
-	
-public:	
-	// Sets default values for this actor's properties
-	ANoughtsAndCrosses_AI();
-	//UPROPERTY(EditDefaultsOnly, Category = "Spawning")
+public:
 	ANoughtsAndCrosses_Manager* _bManager;
+	void virtual Step() = 0;
+};
+
+class  Easy_NoughtsAndCrosses_AI : public NoughtsAndCrosses_AI
+{
+public:	
+	Easy_NoughtsAndCrosses_AI();
+
 	bool PlayerisBlockMe = false;
 	int Stats[5][5];
 	int line = 0;
 	int colum = 0;
 	bool isNeedBlockingPlayer = false;
 	bool isHorizontal = true;
-	void Step();
+	void Step() override;
 	bool checkPlayer();
 	bool Horizontal_Verical();
 };
